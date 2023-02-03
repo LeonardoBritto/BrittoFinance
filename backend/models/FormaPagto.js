@@ -15,6 +15,9 @@ const FormaPagto = conn.define('FormaPagto', {
     },
     tipo: {
         type: DataTypes.CHAR
+    },
+    limite: {
+        type: DataTypes.DECIMAL(10,2)
     }
 }, {freezeTableName: true, timestamps: false})
 
