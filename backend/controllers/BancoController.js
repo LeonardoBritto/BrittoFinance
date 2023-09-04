@@ -54,7 +54,6 @@ module.exports = class BancoController {
         } catch (error) {
             res.status(500).json({message: error})     
         }
-
     }
 
     static async GetAll(req, res) {
