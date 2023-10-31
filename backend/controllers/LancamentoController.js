@@ -1,6 +1,6 @@
 const Lancamento = require('../models/Lancamento')
 
-const { format } = require('date-fns')
+const { format, parse } = require('date-fns')
 
 module.exports = class LancamentoController {
     static async Inserir(req, res) {
@@ -9,7 +9,7 @@ module.exports = class LancamentoController {
         if(!data)
             return res.status(400).json({menssage: 'Data do lançamento obrigatória!'})
 
-        const dataFormatada = format(new Date(data, 'dd/MM/yyyy'), 'yyyy-MM-dd')
+        const dataFormatada = format(parse(data, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')
 
         if(!observacao)
             return res.status(400).json({menssage: 'Observação do lançamento obrigatória!'})
@@ -21,7 +21,7 @@ module.exports = class LancamentoController {
             return res.status(400).json({menssage: 'Estabelecimento do lançamento obrigatório!'})
 
         try {
-            const lancamento = {codigo: 0, dataFormatada, observacao, valor, codusuario, codestabelecimento, codusuarioparte, valorparte}  
+            const lancamento = {codigo: 0, data: dataFormatada, observacao, valor, codusuario, codestabelecimento, codusuarioparte, valorparte}  
             
             await Lancamento.create(lancamento)
             res.status(201).json({message: 'Lançamento cadastrado com sucesso!'}) 
