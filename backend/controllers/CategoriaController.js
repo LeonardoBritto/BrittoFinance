@@ -5,7 +5,7 @@ module.exports = class CategoriaController {
         const {nome} = req.body
 
         if(!nome)
-            return res.status(400).json({menssage: 'Nome da categoria obrigatório!'})
+            return res.status(400).json({mensagem: 'Nome da categoria obrigatório!'})
 
         try {
             const categoria = {codigo: 0, nome}
@@ -23,12 +23,12 @@ module.exports = class CategoriaController {
         const categoriaExist = await Categoria.findByPk(codigo)
 
         if(!categoriaExist) 
-            return res.status(404).json({menssage: 'Categoria não encontrado!'})       
+            return res.status(404).json({mensagem: 'Categoria não encontrado!'})       
 
         const {nome} = req.body
 
         if(!nome)
-            return res.status(400).json({menssage: 'Nome da categoria obrigatório!'})
+            return res.status(400).json({mensagem: 'Nome da categoria obrigatório!'})
 
         try {
             const categoria = {nome}
@@ -46,7 +46,7 @@ module.exports = class CategoriaController {
         const categoriaExist = await Categoria.findByPk(codigo)
 
         if(!categoriaExist) 
-            return res.status(404).json({menssage: 'Categoria não encontrada!'}) 
+            return res.status(404).json({mensagem: 'Categoria não encontrada!'}) 
         
         try {
             await Categoria.destroy({where: {codigo: codigo}})
@@ -59,6 +59,9 @@ module.exports = class CategoriaController {
     static async GetAll(req, res) {
         const categorias = await Categoria.findAll()
 
+        if  (categorias.length === 0)
+            return res.status(404).json({menssagem: 'Nenhuma categoria cadastrada!'})
+
         res.status(201).json({categorias: categorias})    
     }
 
@@ -68,7 +71,7 @@ module.exports = class CategoriaController {
         const categoriaExist = await Categoria.findByPk(codigo)
 
         if(!categoriaExist) 
-            return res.status(404).json({menssage: 'Categoria não encontrada!'}) 
+            return res.status(404).json({mensagem: 'Categoria não encontrada!'}) 
         
         res.status(201).json({categoria: categoriaExist})   
     }

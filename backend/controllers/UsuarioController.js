@@ -8,18 +8,18 @@ module.exports = class UsuarioController {
         const {nome, login, senha} = req.body
 
         if(!nome)
-            return res.status(400).json({menssage: 'Nome obrigatório!'})
+            return res.status(400).json({menssagem: 'Nome obrigatório!'})
 
         if(!login)
-            return res.status(400).json({menssage: 'Login obrigatório!'})
+            return res.status(400).json({menssagem: 'Login obrigatório!'})
 
         const usuarioExist = await Usuario.findOne({where: {login: login}})
 
         if(usuarioExist)
-            return res.status(400).json({menssage: 'Login já esta em uso!'})
+            return res.status(400).json({menssagem: 'Login já esta em uso!'})
 
         if(!senha)
-            return res.status(400).json({menssage: 'Senha obrigatória!'})
+            return res.status(400).json({menssagem: 'Senha obrigatória!'})
 
         const salt = await bcrypt.genSalt(12)
         const senhaHash = await bcrypt.hash(senha, salt)
@@ -28,9 +28,9 @@ module.exports = class UsuarioController {
             const usuario = {codigo: 0, nome, login, senha: senhaHash}
             
             await Usuario.create(usuario)
-            res.status(201).json({message: 'Usuário cadastrado com sucesso!'})
+            res.status(201).json({messagem: 'Usuário cadastrado com sucesso!'})
         } catch (error) {
-            res.status(500).json({message: error})
+            res.status(500).json({messagem: error})
         }        
     }
 
@@ -44,13 +44,13 @@ module.exports = class UsuarioController {
         const usuario = await Usuario.findByPk(codigo)
 
         if(!usuario) 
-            return res.status(404).json({menssage: 'Usuário não encontrado!'})
+            return res.status(404).json({menssagem: 'Usuário não encontrado!'})
 
         try {
             await Usuario.destroy({where: {codigo: codigo}})
-            res.status(201).json({message: 'Usuário excluído com sucesso!'}) 
+            res.status(201).json({messagem: 'Usuário excluído com sucesso!'}) 
         } catch (error) {
-            res.status(500).json({message: error})     
+            res.status(500).json({messagem: error})     
         }
         
     }
@@ -58,6 +58,9 @@ module.exports = class UsuarioController {
     static async GetAll(req, res) {
         const usuarios = await Usuario.findAll()
 
+        if (usuarios.length === 0)
+            return res.status(404).json({menssagem: 'Nenhum usuário cadastrado!'})
+         
         res.status(201).json({usuarios: usuarios})   
     }
 
@@ -65,9 +68,9 @@ module.exports = class UsuarioController {
         const codigo = req.params.codigo       
 
         const usuario = await Usuario.findByPk(codigo)
-
+            
         if(!usuario) 
-            return res.status(404).json({menssage: 'Usuário não encontrado!'}) 
+            return res.status(404).json({menssagem: 'Usuário não encontrado!'}) 
         
         res.status(201).json({usuario: usuario})
     }
@@ -78,10 +81,12 @@ module.exports = class UsuarioController {
         const usuario = await Usuario.findOne({where: {login: login}})
 
         if(!usuario) 
-            return res.status(404).json({menssage: 'Usuário não encontrado!'}) 
+            return res.status(404).json({menssagem: 'Login incorreto, usuário não encontrado!'}) 
 
-        if(usuario.senha != senha)
-            return res.status(404).json({menssage: 'Senha não confere!'}) 
+        const senhaCorreta = await bcrypt.compare(senha, usuario.senha)
+
+        if(!senhaCorreta)
+            return res.status(404).json({menssagem: 'Senha não confere!'}) 
 
         await criarTokenUsuario(usuario, req, res)
     }

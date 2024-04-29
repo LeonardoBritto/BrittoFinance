@@ -5,15 +5,15 @@ module.exports = class BancoController {
         const {nome} = req.body
 
         if(!nome)
-            return res.status(400).json({menssage: 'Nome do banco obrigatório!'})
+            return res.status(400).json({menssagem: 'Nome do banco obrigatório!'})
 
         try {
             const banco = {codigo: 0, nome}
 
             await Banco.create(banco)
-            res.status(201).json({message: 'Banco cadastrado com sucesso!'})  
+            res.status(201).json({messagem: 'Banco cadastrado com sucesso!'})  
         } catch (error) {
-            res.status(500).json({message: error})    
+            res.status(500).json({messagem: error})    
         }
     }
 
@@ -23,20 +23,20 @@ module.exports = class BancoController {
         const bancoExist = await Banco.findByPk(codigo)
 
         if(!bancoExist) 
-            return res.status(404).json({menssage: 'Banco não encontrado!'})       
+            return res.status(404).json({menssagem: 'Banco não encontrado!'})       
 
         const {nome} = req.body
 
         if(!nome)
-            return res.status(400).json({menssage: 'Nome do banco obrigatório!'})
+            return res.status(400).json({menssagem: 'Nome do banco obrigatório!'})
 
         try {
             const banco = {nome}
 
             await Banco.update(banco, {where: {codigo: codigo}})
-            res.status(201).json({message: 'Banco alterado com sucesso!'})  
+            res.status(201).json({messagem: 'Banco alterado com sucesso!'})  
         } catch (error) {
-            res.status(500).json({message: error})    
+            res.status(500).json({messagem: error})    
         }
     }
 
@@ -46,19 +46,22 @@ module.exports = class BancoController {
         const bancoExist = await Banco.findByPk(codigo)
 
         if(!bancoExist) 
-            return res.status(404).json({menssage: 'Banco não encontrado!'}) 
+            return res.status(404).json({menssagem: 'Banco não encontrado!'}) 
         
         try {
             await Banco.destroy({where: {codigo: codigo}})
-            res.status(201).json({message: 'Banco excluído com sucesso!'}) 
+            res.status(201).json({messagem: 'Banco excluído com sucesso!'}) 
         } catch (error) {
-            res.status(500).json({message: error})     
+            res.status(500).json({messagem: error})     
         }
     }
 
     static async GetAll(req, res) {
         const bancos = await Banco.findAll()
 
+        if (bancos.length === 0)
+            return res.status(404).json({menssagem: 'Nenhum banco cadastrado!'}) 
+        
         res.status(201).json({bancos: bancos})
     }
 
@@ -68,7 +71,7 @@ module.exports = class BancoController {
         const bancoExist = await Banco.findByPk(codigo)
 
         if(!bancoExist) 
-            return res.status(404).json({menssage: 'Banco não encontrado!'}) 
+            return res.status(404).json({menssagem: 'Banco não encontrado!'}) 
         
         res.status(201).json({banco: bancoExist})
     }
