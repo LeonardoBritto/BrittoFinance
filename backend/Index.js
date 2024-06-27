@@ -7,7 +7,7 @@ const app = express()
 
 app.use(express.json())
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
+app.use(cors({credentials: true}))
 
 app.use(express.static('public'))
 
@@ -18,4 +18,4 @@ app.use(routes)
 const conn = require('./db/Connection')
 
 //Conectando
-conn.sync().then(app.listen(port)).catch((err) => console.log(err))
+conn.sync().then(app.listen(port)).catch((err) => console.log(err)) 

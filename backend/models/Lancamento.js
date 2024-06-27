@@ -13,6 +13,9 @@ const Lancamento = conn.define('Lancamento', {
     data: {
         type: DataTypes.DATEONLY
     },
+    parcela: {
+        type: DataTypes.CHAR(5)
+    },
     observacao: {
         type: DataTypes.STRING(100)
     },

@@ -5,7 +5,7 @@ module.exports = class EstabelecimentoController {
         const {razaosocial, nomefantasia, codcategoria} = req.body
 
         if(!razaosocial)
-            return res.status(400).json({menssage: 'Razão Social do estabelecimento obrigatório!'})
+            return res.status(400).json({mensagem: 'Razão Social do estabelecimento obrigatório!'})
 
         try {
             const estabelecimento = {codigo: 0, razaosocial, nomefantasia, codcategoria}
@@ -23,12 +23,12 @@ module.exports = class EstabelecimentoController {
         const estabelecimentoExist = await Estabelecimento.findByPk(codigo)
 
         if(!estabelecimentoExist) 
-            return res.status(404).json({menssage: 'Estabelecimento não encontrado!'})       
+            return res.status(404).json({mensagem: 'Estabelecimento não encontrado!'})       
 
         const {razaosocial, nomefantasia, codcategoria} = req.body
 
         if(!razaosocial)
-            return res.status(400).json({menssage: 'Razão Social do estabelecimento obrigatório!'})
+            return res.status(400).json({mensagem: 'Razão Social do estabelecimento obrigatório!'})
 
         try {
             const estabelecimento = {razaosocial, nomefantasia, codcategoria}
@@ -46,7 +46,7 @@ module.exports = class EstabelecimentoController {
         const estabelecimentoExist = await Estabelecimento.findByPk(codigo)
 
         if(!estabelecimentoExist) 
-            return res.status(404).json({menssage: 'Estabelecimento não encontrado!'})
+            return res.status(404).json({mensagem: 'Estabelecimento não encontrado!'})
 
         try {
             await Estabelecimento.destroy({where: {codigo: codigo}})
@@ -57,7 +57,7 @@ module.exports = class EstabelecimentoController {
     }
 
     static async GetAll(req, res) {
-        const estabelecimentos = await Estabelecimento.findAll()
+        const estabelecimentos = await Estabelecimento.findAll({attributes: {exclude: ['codcategoria']}})
 
         res.status(201).json({estabelecimentos: estabelecimentos})
     }
@@ -68,7 +68,7 @@ module.exports = class EstabelecimentoController {
         const estabelecimentoExist = await Estabelecimento.findByPk(codigo)
 
         if(!estabelecimentoExist) 
-            return res.status(404).json({menssage: 'Estabelecimento não encontrado!'})
+            return res.status(404).json({mensagem: 'Estabelecimento não encontrado!'})
 
         res.status(201).json({estabelecimento: estabelecimentoExist})
     }

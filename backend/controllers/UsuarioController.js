@@ -8,18 +8,18 @@ module.exports = class UsuarioController {
         const {nome, login, senha} = req.body
 
         if(!nome)
-            return res.status(400).json({menssagem: 'Nome obrigatório!'})
+            return res.status(400).json({mensagem: 'Nome obrigatório!'})
 
         if(!login)
-            return res.status(400).json({menssagem: 'Login obrigatório!'})
+            return res.status(400).json({mensagem: 'Login obrigatório!'})
 
         const usuarioExist = await Usuario.findOne({where: {login: login}})
 
         if(usuarioExist)
-            return res.status(400).json({menssagem: 'Login já esta em uso!'})
+            return res.status(400).json({mensagem: 'Login já esta em uso!'})
 
         if(!senha)
-            return res.status(400).json({menssagem: 'Senha obrigatória!'})
+            return res.status(400).json({mensagem: 'Senha obrigatória!'})
 
         const salt = await bcrypt.genSalt(12)
         const senhaHash = await bcrypt.hash(senha, salt)
@@ -44,7 +44,7 @@ module.exports = class UsuarioController {
         const usuario = await Usuario.findByPk(codigo)
 
         if(!usuario) 
-            return res.status(404).json({menssagem: 'Usuário não encontrado!'})
+            return res.status(404).json({mensagem: 'Usuário não encontrado!'})
 
         try {
             await Usuario.destroy({where: {codigo: codigo}})
@@ -56,10 +56,10 @@ module.exports = class UsuarioController {
     }
 
     static async GetAll(req, res) {
-        const usuarios = await Usuario.findAll()
+        const usuarios = await Usuario.findAll({attributes: ['codigo', 'nome']})
 
         if (usuarios.length === 0)
-            return res.status(404).json({menssagem: 'Nenhum usuário cadastrado!'})
+            return res.status(404).json({mensagem: 'Nenhum usuário cadastrado!'})
          
         res.status(201).json({usuarios: usuarios})   
     }
@@ -70,7 +70,7 @@ module.exports = class UsuarioController {
         const usuario = await Usuario.findByPk(codigo)
             
         if(!usuario) 
-            return res.status(404).json({menssagem: 'Usuário não encontrado!'}) 
+            return res.status(404).json({mensagem: 'Usuário não encontrado!'}) 
         
         res.status(201).json({usuario: usuario})
     }
@@ -81,12 +81,12 @@ module.exports = class UsuarioController {
         const usuario = await Usuario.findOne({where: {login: login}})
 
         if(!usuario) 
-            return res.status(404).json({menssagem: 'Login incorreto, usuário não encontrado!'}) 
+            return res.status(404).json({mensagem: 'Login incorreto, usuário não encontrado!'}) 
 
         const senhaCorreta = await bcrypt.compare(senha, usuario.senha)
 
         if(!senhaCorreta)
-            return res.status(404).json({menssagem: 'Senha não confere!'}) 
+            return res.status(404).json({mensagem: 'Senha não confere!'}) 
 
         await criarTokenUsuario(usuario, req, res)
     }

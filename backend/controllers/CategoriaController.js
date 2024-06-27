@@ -60,7 +60,7 @@ module.exports = class CategoriaController {
         const categorias = await Categoria.findAll()
 
         if  (categorias.length === 0)
-            return res.status(404).json({menssagem: 'Nenhuma categoria cadastrada!'})
+            return res.status(404).json({mensagem: 'Nenhuma categoria cadastrada!'})
 
         res.status(201).json({categorias: categorias})    
     }
